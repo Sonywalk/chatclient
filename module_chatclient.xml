@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_chatclient" default="compile.module.chatclient">
+  <dirname property="module.chatclient.basedir" file="${ant.file.module_chatclient}"/>
+  
+  <property name="module.jdk.home.chatclient" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.chatclient" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.chatclient" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.chatclient" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="chatclient.output.dir" value="${module.chatclient.basedir}/out/production/ChatClient"/>
+  <property name="chatclient.testoutput.dir" value="${module.chatclient.basedir}/out/test/ChatClient"/>
+  
+  <path id="chatclient.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="chatclient.module.production.classpath">
+    <path refid="${module.jdk.classpath.chatclient}"/>
+  </path>
+  
+  <path id="chatclient.runtime.production.module.classpath">
+    <pathelement location="${chatclient.output.dir}"/>
+  </path>
+  
+  <path id="chatclient.module.classpath">
+    <path refid="${module.jdk.classpath.chatclient}"/>
+    <pathelement location="${chatclient.output.dir}"/>
+  </path>
+  
+  <path id="chatclient.runtime.module.classpath">
+    <pathelement location="${chatclient.testoutput.dir}"/>
+    <pathelement location="${chatclient.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.chatclient">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.chatclient">
+    <patternset refid="excluded.from.module.chatclient"/>
+  </patternset>
+  
+  <path id="chatclient.module.sourcepath">
+    <dirset dir="${module.chatclient.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.chatclient" depends="compile.module.chatclient.production,compile.module.chatclient.tests" description="Compile module ChatClient"/>
+  
+  <target name="compile.module.chatclient.production" depends="register.custom.compilers" description="Compile module ChatClient; production classes">
+    <mkdir dir="${chatclient.output.dir}"/>
+    <javac2 destdir="${chatclient.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.chatclient}/javac">
+      <compilerarg line="${compiler.args.chatclient}"/>
+      <bootclasspath refid="chatclient.module.bootclasspath"/>
+      <classpath refid="chatclient.module.production.classpath"/>
+      <src refid="chatclient.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.chatclient"/>
+    </javac2>
+    
+    <copy todir="${chatclient.output.dir}">
+      <fileset dir="${module.chatclient.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.chatclient.tests" depends="register.custom.compilers,compile.module.chatclient.production" description="compile module ChatClient; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.chatclient" description="cleanup module">
+    <delete dir="${chatclient.output.dir}"/>
+    <delete dir="${chatclient.testoutput.dir}"/>
+  </target>
+</project>

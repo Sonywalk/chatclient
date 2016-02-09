@@ -1,0 +1,15 @@
+.list-cell:filled:selected {
+    -fx-background-insets: 0 ;
+    -fx-focus-color: transparent;
+}
+
+.list-view{
+}
+
+.button{
+    -fx-border-radius: 5;
+}
+
+#red{
+    -fx-text-fill: red;
+}
